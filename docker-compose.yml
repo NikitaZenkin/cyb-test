@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: db
+    restart: unless-stopped
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./postgres-data:/var/lib/postgresql
+    ports:
+      - 5435:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
+  app:
+    container_name: app
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${SERV_PORT}:${SERV_PORT}
+    environment:
+      DSN: ${DSN}
+      MIGRATION_PATH: ${MIGRATION_PATH}
+      SERV_HOST: ${SERV_HOST}
+      SERV_PORT: ${SERV_PORT}
+      BASE_PATH: ${BASE_PATH}
+      DNS_SERV_ADDR: ${DNS_SERV_ADDR}
+    depends_on:
+      db:
+        condition: service_healthy

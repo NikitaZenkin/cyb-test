@@ -1,0 +1,111 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Cyb-test",
+        "contact": {}
+    },
+    "paths": {
+        "/fqdn/list": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fqdn"
+                ],
+                "summary": "получение списков fqdn по ip",
+                "operationId": "fqdn-get",
+                "parameters": [
+                    {
+                        "description": "список ip",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.IpFQDNs"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/fqdn/load": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "fqdn"
+                ],
+                "summary": "загрузка списка fqdn",
+                "operationId": "fqdn-load",
+                "parameters": [
+                    {
+                        "description": "список fqdn",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.IpFQDNs": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "http.Error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

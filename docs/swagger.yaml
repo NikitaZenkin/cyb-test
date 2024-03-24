@@ -1,0 +1,71 @@
+definitions:
+  entity.IpFQDNs:
+    additionalProperties:
+      items:
+        type: string
+      type: array
+    type: object
+  http.Error:
+    properties:
+      error:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Cyb-test
+paths:
+  /fqdn/list:
+    post:
+      operationId: fqdn-get
+      parameters:
+      - description: список ip
+        in: body
+        name: input
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.IpFQDNs'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: получение списков fqdn по ip
+      tags:
+      - fqdn
+  /fqdn/load:
+    post:
+      operationId: fqdn-load
+      parameters:
+      - description: список fqdn
+        in: body
+        name: input
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: загрузка списка fqdn
+      tags:
+      - fqdn
+swagger: "2.0"
