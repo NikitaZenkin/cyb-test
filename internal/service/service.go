@@ -51,9 +51,20 @@ func (s *Service) FQDNsLoad(_ context.Context, fqdns []string) error {
 }
 
 func (s *Service) FQDNsGet(ctx context.Context, ips []string) (entity.IpFQDNs, error) {
-	result, err := s.rep.FQDNsGet(ctx, ips)
-	if err != nil {
-		s.log.Error("failed to get fqdns", zap.Error(err))
+	var (
+		err    error
+		result entity.IpFQDNs
+	)
+
+	if err = s.rep.WithTx(ctx, func(ctx context.Context) error {
+		result, err = s.rep.FQDNsGet(ctx, ips)
+		if err != nil {
+			s.log.Error("failed to get fqdns", zap.Error(err))
+			return err
+		}
+
+		return nil
+	}); err != nil {
 		return nil, err
 	}
 
